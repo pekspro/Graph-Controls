@@ -183,10 +183,6 @@
       <Project>{2E4A708A-DF53-4863-B797-E14CDC6B90FA}</Project>
       <Name>CommunityToolkit.Authentication.Uwp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CommunityToolkit.Graph.Uwp\CommunityToolkit.Graph.Uwp.csproj">
-      <Project>{42252ee8-7e68-428f-972b-6d2dd3aa12cc}</Project>
-      <Name>CommunityToolkit.Graph.Uwp</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
