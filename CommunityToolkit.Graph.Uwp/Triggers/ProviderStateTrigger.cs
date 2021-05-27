@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using CommunityToolkit.Authentication;
 using Windows.UI.Xaml;
 
@@ -12,20 +13,46 @@ namespace CommunityToolkit.Graph.Uwp
     /// </summary>
     public class ProviderStateTrigger : StateTriggerBase
     {
+        private ProviderState _state;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProviderStateTrigger"/> class.
+        /// Gets or sets the expected ProviderState.
         /// </summary>
+        public ProviderState State
+        {
+            get => _state;
+            set
+            {
+                // Doesn't fire when constructed in XAML.
+                if (_state != value)
+                {
+                    _state = value;
+
+                    ProviderManager.Instance.ProviderUpdated -= OnProviderUpdated;
+                    ProviderManager.Instance.ProviderUpdated += OnProviderUpdated;
+
+                    UpdateState();
+                }
+            }
+        }
+
         public ProviderStateTrigger()
         {
-            ProviderManager.Instance.ProviderUpdated += OnProviderUpdated;
+            // Doesn't fire when constructed in XAML.
         }
 
         private void OnProviderUpdated(object sender, ProviderUpdatedEventArgs e)
         {
-            var provider = ProviderManager.Instance.GlobalProvider;
-            var isSignedIn = provider?.State == ProviderState.SignedIn;
+            UpdateState();
+        }
 
-            SetActive(isSignedIn);
+        private async void UpdateState()
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                var provider = ProviderManager.Instance.GlobalProvider;
+                SetActive(provider?.State == State);
+            });
         }
     }
 }
