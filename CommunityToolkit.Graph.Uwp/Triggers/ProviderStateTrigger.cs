@@ -23,14 +23,10 @@ namespace CommunityToolkit.Graph.Uwp
             get => _state;
             set
             {
-                // Doesn't fire when constructed in XAML.
+                // Doesn't fire when initially set in XAML.
                 if (_state != value)
                 {
                     _state = value;
-
-                    ProviderManager.Instance.ProviderUpdated -= OnProviderUpdated;
-                    ProviderManager.Instance.ProviderUpdated += OnProviderUpdated;
-
                     UpdateState();
                 }
             }
@@ -39,6 +35,7 @@ namespace CommunityToolkit.Graph.Uwp
         public ProviderStateTrigger()
         {
             // Doesn't fire when constructed in XAML.
+            ProviderManager.Instance.ProviderUpdated += OnProviderUpdated;
         }
 
         private void OnProviderUpdated(object sender, ProviderUpdatedEventArgs e)
@@ -46,13 +43,10 @@ namespace CommunityToolkit.Graph.Uwp
             UpdateState();
         }
 
-        private async void UpdateState()
+        private void UpdateState()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                var provider = ProviderManager.Instance.GlobalProvider;
-                SetActive(provider?.State == State);
-            });
+            var provider = ProviderManager.Instance.GlobalProvider;
+            SetActive(provider?.State == State);
         }
     }
 }

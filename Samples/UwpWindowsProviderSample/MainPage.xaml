@@ -5,12 +5,33 @@
     xmlns:local="using:UwpWindowsProviderSample"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.Graph.Uwp.Controls"
+    xmlns:wgt="using:CommunityToolkit.Graph.Uwp"
+    xmlns:controls="using:CommunityToolkit.Graph.Uwp.Controls" xmlns:authentication="using:CommunityToolkit.Authentication"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
         <controls:LoginButton />
         <TextBlock x:Name="SignedInUserTextBlock" />
+
+        <TextBlock wgt:ElementExtensions.IsVisibleWhenSignedIn="True" Text="Only visible when signed in" />
+        <TextBlock wgt:ElementExtensions.IsVisibleWhenSignedIn="False" Text="Only visible when signed out" />
+
+        <Grid>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <wgt:ProviderStateTrigger State="SignedIn" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="MyTextBlock.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <TextBlock Name="MyTextBlock" Visibility="Collapsed" Text="You are now signed in" />
+        </Grid>
     </StackPanel>
 </Page>
